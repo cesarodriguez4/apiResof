@@ -4,6 +4,8 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+let mysql = require('mysql');
+var cors = require('cors');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -22,8 +24,38 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+let connection = mysql.createConnection({
+  host     : 'jj820qt5lpu6krut.cbetxkdyhwsb.us-east-1.rds.amazonaws.com',
+  user     : 'y6m2ih72fhpu9tzq',
+  password : 'ypz04gambol0eo8a',
+  database : 'p845w1b4kh6x2m4z'
+});
+
+
+/*
+let connection = mysql.createConnection({
+  host     : 'localhost',
+  user     : 'root',
+  password : '',
+  database : 'USUARIOS'
+});
+*/
+
+connection.connect(function(error) {
+  if(error) {
+    console.log(error);
+  } else {
+    console.log('Conectado Exitosamente');
+  }
+}); 
+
+app.use(cors());
+app.options('*', cors());
+
+
 app.use('/', index);
 app.use('/users', users);
+require('./routes/api')(app, connection);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -31,6 +63,8 @@ app.use(function(req, res, next) {
   err.status = 404;
   next(err);
 });
+
+
 
 // error handler
 app.use(function(err, req, res, next) {
