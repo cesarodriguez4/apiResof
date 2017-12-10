@@ -31,6 +31,16 @@ app.get('/api/diametros/linea_de_succion', (req, res) => {
   }, true);
 });
 
+app.get('/api/diametros/pump_discharge', (req, res) => {
+  crud.select(con, {select: '*', from: `liquid_piping_capacities`}, (err, row) => {
+    if(err) {
+      res.send(err);
+    }
+    const i = row.find(i => i.service == 'pump_suction');
+    res.send(i);
+  }, true);
+});
+
 
 
 }
