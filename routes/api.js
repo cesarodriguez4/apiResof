@@ -41,6 +41,16 @@ app.get('/api/diametros/pump_discharge', (req, res) => {
   }, true);
 });
 
+app.get('/api/diametros/gas_caliente', (req, res) => {
+  crud.select(con, {select: '*', from: `Hot_Gas_Defrost_Line_Size`}, (err, row) => {
+    if(err) {
+      res.send(err);
+    }
+    const i = row.find(i => i.NPS == '5 PSIGa');
+    res.send(i);
+  }, true);
+});
+
 
 
 }
